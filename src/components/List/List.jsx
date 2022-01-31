@@ -6,10 +6,8 @@ import PlaceDetails from '../PlaceDetails/PlaceDetails';
 import useStyles from './styles';
 import { useState, useEffect, createRef } from 'react';
 
-const List = ({ places, childClicked, isLoading }) => {
-    const classes = useStyles();
-    const [type, setType] = useState('restaurants');
-    const [rating, setRating] = useState('');
+const List = ({ places, childClicked, isLoading, type, setType, rating, setRating }) => {
+    const classes = useStyles();    
     const [elRefs, setElrefs] = useState([]);
 
     useEffect(() => {

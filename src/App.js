@@ -9,6 +9,8 @@ import Map from './components/Map/Map';
 
 const App = () => {
     const [places, setPlaces] = useState([]);
+    const [filteredPlaces, setFilteredPlaces] = useState([]);
+    
     const [childClicked, setChildClicked] = useState(null);
 
     const [coordinates, setCoordinates] = useState({});
@@ -25,15 +27,21 @@ const App = () => {
     }, []);
 
     useEffect(() => {
+        const filteredPlaces = places.filter((place) => place.rating > rating);   
+        setFilteredPlaces(filteredPlaces);
+    }, [rating]);
+    
+    useEffect(() => {
         setIsLoading(true);
         if (bounds && bounds.sw && bounds.ne) {
-            return getPlacesData(bounds.sw, bounds.ne)
+            return getPlacesData(type, bounds.sw, bounds.ne)
                 .then((data) => {                
                     setPlaces(data);
+                    setFilteredPlaces([]);
                     setIsLoading(false);
                 })
         } 
-    }, [coordinates, bounds]);
+    }, [type, coordinates, bounds]);
 
     return (
         <>
@@ -42,7 +50,7 @@ const App = () => {
             <Grid container spacing={3} style={{ width: '100%'}}>
                 <Grid item xs={12} md={4} >
                     <List 
-                        places={places} 
+                        places={filteredPlaces.length ? filteredPlaces : places} 
                         childClicked={childClicked}
                         isLoading={isLoading}
                         type={type}
@@ -57,7 +65,7 @@ const App = () => {
                         setBounds={setBounds}
                         coordinates={coordinates}
                         setChildClicked={setChildClicked}
-                        places={places}
+                        places={filteredPlaces.length ? filteredPlaces : places}
                     />
                 </Grid>
             </Grid>
